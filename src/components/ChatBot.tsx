@@ -3,7 +3,9 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import { Bot, User } from "lucide-react";
+import { Bot } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -16,12 +18,13 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! I'm your AI assistant powered by Vertex AI. How can I help you today?",
+      text: "Hello! I'm your AI assistant powered by Google's Gemini Flash 2.0. How can I help you today?",
       isUser: false,
       timestamp: new Date(),
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSendMessage = async (text: string) => {
     const userMessage: Message = {
@@ -34,17 +37,43 @@ const ChatBot = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual Vertex AI call once Supabase is connected)
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('chat-with-vertex', {
+        body: { message: text }
+      });
+
+      if (error) {
+        throw error;
+      }
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm a demo response! To get real AI responses, please connect this project to Supabase and configure Vertex AI integration.",
+        text: data.response || "Sorry, I couldn't generate a response.",
         isUser: false,
         timestamp: new Date(),
       };
+
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error calling Vertex AI:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I'm having trouble connecting to my AI service right now. Please try again later.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Error",
+        description: "Failed to get AI response. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -59,7 +88,7 @@ const ChatBot = () => {
             AI Chat Assistant
           </h1>
         </div>
-        <p className="text-gray-600">Powered by Google Vertex AI</p>
+        <p className="text-gray-600">Powered by Google Gemini Flash 2.0</p>
       </div>
 
       {/* Chat Container */}
