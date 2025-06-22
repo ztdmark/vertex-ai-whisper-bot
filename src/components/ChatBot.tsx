@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { Bot } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -24,7 +24,6 @@ const ChatBot = () => {
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSendMessage = async (text: string) => {
     const userMessage: Message = {
@@ -66,11 +65,7 @@ const ChatBot = () => {
 
       setMessages(prev => [...prev, errorMessage]);
       
-      toast({
-        title: "Error",
-        description: "Failed to get AI response. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to get AI response. Please try again.");
     } finally {
       setIsLoading(false);
     }

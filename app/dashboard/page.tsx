@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react'
@@ -13,38 +14,12 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 export default function Page() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'playground' | 'projects' | 'data-library' | 'quick-create'>('dashboard')
 
-  const handleNavigateToDashboard = () => {
-    setCurrentView('dashboard')
-  }
-
-  const handleNavigateToProjects = () => {
-    setCurrentView('projects')
-  }
-
-  const handleNavigateToDataLibrary = () => {
-    setCurrentView('data-library')
-  }
-
-  const handleNavigateToPlayground = () => {
-    setCurrentView('playground')
-  }
-
-  const handleNavigateToQuickCreate = () => {
-    setCurrentView('quick-create')
-  }
-
   return (
     <SidebarProvider>
       <AppSidebar 
         variant="inset" 
         currentView={currentView}
-        onNavigate={(view) => {
-          if (view === 'quick-create') {
-            setCurrentView('quick-create')
-          } else {
-            setCurrentView(view as 'dashboard' | 'playground' | 'projects' | 'data-library')
-          }
-        }}
+        onNavigate={setCurrentView}
       />
       <SidebarInset className="flex flex-col h-screen overflow-hidden">
         <div className="sticky top-0 z-50 bg-background rounded-t-xl overflow-hidden flex-shrink-0">
