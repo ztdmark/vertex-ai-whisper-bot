@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -105,7 +106,7 @@ export function AppSidebar({ currentView = 'dashboard', onNavigate, ...props }: 
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onNavigate={onNavigate} />
+        <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
