@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { useState } from "react"
 import { XIcon } from "lucide-react"
 import { LoginForm } from "./login-form"

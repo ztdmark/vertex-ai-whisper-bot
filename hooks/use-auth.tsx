@@ -17,9 +17,11 @@ interface SignInProps {
 interface AuthContextType {
   user: User | null
   loading: boolean
-  signUp: ({ email, password }: SignUpProps) => Promise<any>
-  signIn: ({ email, password }: SignInProps) => Promise<any>
+  signUp: (props: SignUpProps) => Promise<any>
+  signIn: (email: string, password: string) => Promise<any>
+  signInWithGoogle: () => Promise<any>
   signOut: () => Promise<void>
+  resetPassword: (email: string) => Promise<any>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -57,27 +59,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       })
       if (error) throw error
-      return data
+      return { data, error: null }
     } catch (error: any) {
-      if (error) throw error
+      return { data: null, error }
     } finally {
       setLoading(false)
     }
   }
 
-  const signIn = async ({ email, password }: SignInProps) => {
+  const signIn = async (email: string, password: string) => {
     try {
       setLoading(true)
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email!,
-        password: password!,
+        email,
+        password,
       })
       if (error) throw error
-      return data
+      return { data, error: null }
     } catch (error: any) {
-      if (error) throw error
+      return { data: null, error }
     } finally {
       setLoading(false)
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (error) throw error
+      return { data, error: null }
+    } catch (error: any) {
+      return { data: null, error }
+    }
+  }
+
+  const resetPassword = async (email: string) => {
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      })
+      if (error) throw error
+      return { data, error: null }
+    } catch (error: any) {
+      return { data: null, error }
     }
   }
 
@@ -97,7 +126,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
+    resetPassword,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

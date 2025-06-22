@@ -1,24 +1,15 @@
 "use client"
 
-import * as React from "react"
 import { useState } from "react"
 import { 
   CheckIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
-  BotIcon,
-  SparklesIcon,
-  XIcon,
   TwitterIcon,
   FacebookIcon,
   InstagramIcon,
   LinkedinIcon,
   GlobeIcon,
-  BookOpenIcon,
-  FlaskConicalIcon,
-  DatabaseIcon,
-  ArrowUpRightIcon,
-  ZapIcon
 } from "lucide-react"
 import { toast } from "sonner"
 
