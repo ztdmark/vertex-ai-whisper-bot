@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -15,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useProjects } from '@/hooks/use-projects'
 
-const projects = [
+const sampleProjects = [
   {
     id: 1,
     title: "Customer Support Agent",
@@ -175,18 +176,6 @@ export function Projects() {
     plan: project.plan,
     created_at: project.created_at
   }))
-
-  // Combine user projects with example projects
-  const allProjects = [...userProjects, ...projects]
-
-  const filteredProjects = allProjects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.author.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "Featured" || 
-                           selectedCategory === "My Projects" || 
-                           project.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
 
   return (
     <div className="flex flex-col h-full w-full max-w-full overflow-hidden bg-background">
@@ -352,7 +341,7 @@ export function Projects() {
 
             {/* Projects Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-12">
-              {projects.slice(0, 4).map((project) => (
+              {sampleProjects.slice(0, 4).map((project) => (
                 <Card
                   key={project.id}
                   className="group bg-sidebar-accent border-sidebar-border hover:border-sidebar-foreground/20 transition-all duration-200 cursor-pointer overflow-hidden"
@@ -434,7 +423,7 @@ export function Projects() {
 
             {/* Second Projects Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {projects.slice(4).map((project) => (
+              {sampleProjects.slice(4).map((project) => (
                 <Card
                   key={project.id}
                   className="group bg-sidebar-accent border-sidebar-border hover:border-sidebar-foreground/20 transition-all duration-200 cursor-pointer overflow-hidden"
@@ -495,23 +484,6 @@ export function Projects() {
                 </Card>
               ))}
             </div>
-
-            {/* Show message if no results */}
-            {allProjects.length === 0 && !loading && (
-              <div className="text-center py-12">
-                <p className="text-sidebar-foreground/70 mb-4">No projects found matching your criteria.</p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSearchTerm("")
-                    setActiveTab("Featured")
-                  }}
-                  className="bg-sidebar-accent border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent/80"
-                >
-                  Clear filters
-                </Button>
-              </div>
-            )}
 
             {/* Loading state */}
             {loading && (
