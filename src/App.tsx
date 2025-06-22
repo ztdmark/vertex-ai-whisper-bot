@@ -7,7 +7,7 @@ import DashboardPage from '../app/dashboard/page';
 function App() {
   return (
     <div className="h-screen bg-sidebar overflow-hidden">
-      <ThemeProvider defaultTheme="dark" attribute="class">
+      <ThemeProvider defaultTheme="dark">
         <AuthProvider>
           <ProtectedRoute>
             <DashboardPage />

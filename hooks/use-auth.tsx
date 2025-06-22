@@ -5,13 +5,8 @@ import { supabase } from '@/lib/supabase'
 import { type User } from '@supabase/supabase-js'
 
 interface SignUpProps {
-  email?: string
-  password?: string
-}
-
-interface SignInProps {
-  email?: string
-  password?: string
+  email: string
+  password: string
 }
 
 interface AuthContextType {
@@ -52,8 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true)
       const { data, error } = await supabase.auth.signUp({
-        email: email!,
-        password: password!,
+        email,
+        password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
