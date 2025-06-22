@@ -32,13 +32,13 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ currentView = 'dashboard', onNavigate, ...props }: AppSidebarProps) {
-  const { user, profile } = useAuth()
+  const { user } = useAuth()
 
   const data = {
     user: user ? {
-      name: profile?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+      name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
       email: user.email || 'user@example.com',
-      avatar: profile?.avatar_url || user.user_metadata?.avatar_url || "/avatars/default.jpg",
+      avatar: user.user_metadata?.avatar_url || "/avatars/default.jpg",
     } : {
       name: "Guest",
       email: "guest@example.com", 
